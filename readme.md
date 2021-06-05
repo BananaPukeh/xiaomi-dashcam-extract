@@ -6,7 +6,7 @@ This is a Front and Back camera.
 
 ## Usage
 
-There are two storage systems
+To extract all the video's from the dashcam to your computer use the following command.
 
 ```
 ./extractor.sh /path/to/dashcam/root /path/to/dashcam/library
