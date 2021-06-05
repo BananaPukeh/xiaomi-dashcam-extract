@@ -193,19 +193,9 @@ library_path=${args[1]}
 validate_dashcam_path $dashcam_path
 validate_path $library_path
 
+shopt -s nullglob 
 
-testdir=(/mnt/g/Event/Back/*)
-
-itemCount=$testdir[@]
-
-echo $itemCount
-
-
-for file in $testdir; do
-  echo $file
-
-done
 # Move all stuff to pc library
-# handle_dashcam_root $dashcam_path $library_path
+handle_dashcam_root $dashcam_path $library_path
 
 echo "Done moving all content"
