@@ -118,7 +118,7 @@ merge(){
 
     rules="[0:v]pad=iw*1:ih[front];[1:v]scale=1280:720[back];[front][back]overlay=0:0[mixed]"
 
-    ffmpeg  -i "$front" -i "$back" -map 0:a -c:a copy -filter_complex "$rules" -map '[mixed]' -c:v libx264 -crf 23 -preset ultrafast "$output"
+    ffmpeg  -i "$front" -i "$back" -map 0:a -c:a copy -filter_complex "$rules" -map '[mixed]' -c:v libx264 -crf 23 -preset veryfast "$output"
 }
 
 library_path="$1"
