@@ -96,14 +96,14 @@ setup_colors
 
 
 validate_path(){
-    if [[ ! -d $1 ]] ; then
+    if [[ ! -d "$1" ]] ; then
         die "Invalid path: $1"
     fi
 }
 
 scan_library(){
-    local raw_library_path=$1
-    local concat_library=$2
+    local raw_library_path="$1"
+    local concat_library="$2"
     local extension="mp4"
 
     for car_dir in $raw_library_path/* ; do
@@ -113,54 +113,54 @@ scan_library(){
             date=${date_dir##*/}
             for camera_dir in $date_dir/*; do
             camera=${camera_dir##*/}
-                rel_recording_path=$(get_recording_rel_path $car $date $camera $extension)
+               rel_recording_path=$(get_recording_rel_path "$car" "$date" "$camera" "$extension")
 
-                handle_camera_dir $camera_dir "$rel_recording_path" $concat_library
+               handle_camera_dir "$camera_dir" "$rel_recording_path" "$concat_library"
             done
         done
     done
 }
  
 get_recording_rel_path(){
-    local car=$1
-    local date=$2
-    local camera=$3
-    local extension=$4
+    local car="$1"
+    local date="$2"
+    local camera="$3"
+    local extension="$4"
 
     echo "$car/$car $date $camera.$extension"
 }
 
 handle_camera_dir(){
-    local camera_dir=$1
-    local rel_recording_path=$2
-    local concat_library=$3
+    local camera_dir="$1"
+    local rel_recording_path="$2"
+    local concat_library="$3"
 
-    local file_path=$concat_library/$rel_recording_path
+    local file_path="$concat_library/$rel_recording_path"
 
-    if [[ -e $file_path ]]; then
+    if [[ -e "$file_path" ]]; then
         echo "Skipping $file_path"
     else
-        concat_files $camera_dir "$file_path"
+        concat_files "$camera_dir" "$file_path"
     fi
 }
 
 concat_files(){
-    local directory=$1
-    local output=$2
+    local directory="$1"
+    local output="$2"
 
     > $list_file
 
-    for f in $(ls -tr $directory/*.mp4); do
-        echo "file '$f'" >> $list_file;
+    for f in $(ls -tr "$directory"/*.mp4); do
+        echo "file '$f'" >> "$list_file";
     done
 
-    ffmpeg -f concat -safe 0 -i $list_file -c copy "$output"
+    ffmpeg -f concat -safe 0 -i "$list_file" -c copy "$output"
 }
 
 ensure_directory(){
-    if [[ ! -d $1 ]]; then
+    if [[ ! -d "$1" ]]; then
       echo "Creating directory $1"
-      mkdir $1
+      mkdir "$1"
     fi
 }
 
@@ -175,4 +175,4 @@ validate_path $concat_library
 list_file='.files'
 
 # Go
-scan_library $raw_library $concat_library
+scan_library "$raw_library" "$concat_library"
