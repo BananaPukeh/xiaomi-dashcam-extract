@@ -34,10 +34,13 @@ The dashcam uses the following structure.
 
 ### Your computer
 
-If you have multiple cars or want to structure your library, it's reccomended to create seperate folders for each car.
+On your computer, you need the following libraries
+
+#### The raw imported library
+This library is a structured copy from the files on your dashcam SD card. The extract script will move the files to the matching recording date and the camera.
 
 ```
-dashcam/
+raw-libray/
   GT86/
     2021-06-05/
       Front/
@@ -51,4 +54,21 @@ dashcam/
       Back/
         ...
     ...
+```
+
+#### The merged library
+This library contains all files that are merged together by the `concat.sh` script and mixed together in the `merge.sh` script
+
+```
+library/
+  GT86/
+    GT86 2021-06-05 Front.mp4
+    GT86 2021-06-05 Back.mp4
+    GT86 2021-06-05 Mixed.mp4
+    GT86 2021-06-06 Front.mp4
+    GT86 2021-06-06 Back.mp4
+    GT86 2021-06-06 Mixed.mp4
+    ...
+  ...
+
 ```
