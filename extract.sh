@@ -101,101 +101,101 @@ validate_dashcam_path(){
 }
 
 handle_dashcam_root(){
-  dashcam_dir=$1
-  library_path=$2
+  dashcam_dir="$1"
+  library_path="$2"
   
-  for category_dir in $dashcam_dir/*; do
-    notify_path $category_dir
-    handle_category_directory $category_dir $library_path
+  for category_dir in "$dashcam_dir"/*; do
+    notify_path "$category_dir"
+    handle_category_directory "$category_dir" "$library_path"
   done
 }
 
 # Handle a directory category on the dashcam: ex: Event or Normal
 handle_category_directory(){
-  front_path=$1/Front
-  back_path=$1/Back
-  library_path=$2
+  front_path="$1"/Front
+  back_path="$1"/Back
+  library_path="$2"
 
-  if [[ -d $front_path ]]; then
-    notify_path $front_path
-    handle_camera_directory $front_path $library_path "Front"
+  if [[ -d "$front_path" ]]; then
+    notify_path "$front_path"
+    handle_camera_directory "$front_path" "$library_path" "Front"
   fi
 
-  if [[ -d $back_path ]]; then
-    notify_path $back_path
-    handle_camera_directory $back_path $library_path "Back"
+  if [[ -d "$back_path" ]]; then
+    notify_path "$back_path"
+    handle_camera_directory "$back_path" "$library_path" "Back"
   fi
 }
 
 # Handle a directory that contains files, such as Front/ or Back/ 
 # Parms: camera_dir libary_root camera_name
 handle_camera_directory(){
-  cam_dir=$1
-  library_path=$2
+  cam_dir="$1"
+  library_path="$2"
  
-  for file in $cam_dir/* ; do
-    date=$(get_date_for_file $file)
+  for file in "$cam_dir"/* ; do
+    date=$(get_date_for_file "$file")
     
-    library_date_dir=$library_path/$date
-    ensure_directory $library_date_dir
+    library_date_dir="$library_path"/"$date"
+    ensure_directory "$library_date_dir"
 
-    library_date_camera_dir=$library_date_dir/$3
-    ensure_directory $library_date_camera_dir
+    library_date_camera_dir="$library_date_dir"/"$3"
+    ensure_directory "$library_date_camera_dir"
 
-    handle_file $file $library_date_camera_dir
+    handle_file "$file" "$library_date_camera_dir"
   done
 }
 
 handle_file(){
-  file_path=$1
-  to_dir=$2
+  file_path="$1"
+  to_dir="$2"
 
   file_name=${file_path##*/}
 
-  dest_path=$to_dir/$file_name
-  if [[ -e $dest_path ]]; then
-    source_size=$(get_file_size $file_path)
-    dest_size=$(get_file_size $dest_path)
+  dest_path="$to_dir"/"$file_name"
+  if [[ -e "$dest_path" ]]; then
+    source_size=$(get_file_size "$file_path")
+    dest_size=$(get_file_size "$dest_path")
 
-    if [[ $source_size -eq $dest_size ]]; then
-      echo "File already copied, skipping: $file_name"
+    if [[ "$source_size" -eq "$dest_size" ]]; then
+      echo "File already copied, skipping: "$file_name""
       return 0
     fi
   fi
 
-  echo "Moving $file_path to $to_dir"
-  mv $file_path $to_dir
+  echo "Moving "$file_path" to "$to_dir""
+  mv "$file_path" "$to_dir"
 }
 
 ensure_directory(){
-    if [[ ! -d $1 ]]; then
-      echo "Creating directory $1"
-      mkdir $1
+    if [[ ! -d "$1" ]]; then
+      echo "Creating directory "$1""
+      mkdir "$1"
     fi
 }
 
 get_file_size(){
-  echo $(du -k $1 | cut -f1)
+  echo $(du -k "$1" | cut -f1)
 }
 
 get_date_for_file(){
-  date=$(date -r $1 "+%Y-%m-%d")
-  echo $date
+  date=$(date -r "$1" "+%Y-%m-%d")
+  echo "$date"
 }
 
 notify_path(){
-  echo "Moving to $1"
+  echo "Moving to "$1""
 }
 
-dashcam_path=${args[0]}
-library_path=${args[1]} 
+dashcam_path="${args[0]}"
+library_path="${args[1]}"
 
-validate_dashcam_path $dashcam_path
-validate_path $library_path
+validate_dashcam_path "$dashcam_path"
+validate_path "$library_path"
 
 shopt -s nullglob 
 
 # Move all stuff to pc library
-handle_dashcam_root $dashcam_path $library_path
+handle_dashcam_root "$dashcam_path" "$library_path"
 
 echo "Done moving all content"
